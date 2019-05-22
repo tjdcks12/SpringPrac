@@ -10,9 +10,7 @@ public class UserDao {
 
 
     public void add(User user) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection c = DriverManager.getConnection("jdbc:mysql://localhost/springbook?characterEncoding=UTF-8&serverTimezone=UTC", "root", "tjdals5124");
-
+        Connection c = getConnection();
         PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
         ps.setString(1, user.getId());
         ps.setString(2, user.getName());
@@ -25,8 +23,7 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection c = DriverManager.getConnection("jdbc:mysql://localhost/springbook?characterEncoding=UTF-8&serverTimezone=UTC", "root", "tjdals5124");
+        Connection c = getConnection();
 
         PreparedStatement ps = c.prepareStatement("select * from users where id=?");
         ps.setString(1, id);
@@ -61,5 +58,18 @@ public class UserDao {
         System.out.println(user2.getName());
         System.out.println(user2.getPassword());
         System.out.println(user2.getId() + "조회 성공");
+
+        /*관심사의 분리
+        1. DB와 연결을 위한 커넥션을 어떻게 가져올까
+        2. 사용자 등록을 위해 DB에 보낼 SQL문장을 담을 Statement를 만들고 실행하는 것
+        3. 사용한 리소스인 Statement와 Connection 오브젝트를 닫아줘서 소중한 공유 리소스를 시스템에 돌려주는 것
+         */
+    }
+
+    private Connection getConnection() throws ClassNotFoundException, SQLException {
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection c = DriverManager.getConnection("jdbc:mysql://localhost/springbook?characterEncoding=UTF-8&serverTimezone=UTC", "root", "tjdals5124");
+
+        return c;
     }
 }
