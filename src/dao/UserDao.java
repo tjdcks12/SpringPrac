@@ -66,7 +66,7 @@ public class UserDao {
          */
     }
 
-    private Connection getConnection() throws ClassNotFoundException, SQLException {
+    private Connection getConnection() throws ClassNotFoundException, SQLException { // 이러한 작업을 메소드 추출 기법이라고 한다.
         Class.forName("com.mysql.jdbc.Driver");
         Connection c = DriverManager.getConnection("jdbc:mysql://localhost/springbook?characterEncoding=UTF-8&serverTimezone=UTC", "root", "tjdals5124");
 
