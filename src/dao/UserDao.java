@@ -4,9 +4,13 @@ import model.User;
 
 import java.sql.*;
 
-public class UserDao {
+public abstract class UserDao {
 
     // 초난감 DAO
+
+    // 이 UserDao가 아주 유명해져서 N사와 D사가 구매의지가 있다. But 각 개발사는 다른 DB를 사용하고 있다면??
+    // DB 커넥션을 가져오는데 있어 독자적으로 만든 방법을 적용하고 싶어한다면?
+    // 상속을 통한 확장을 적용해보자.
 
 
     public void add(User user) throws ClassNotFoundException, SQLException {
@@ -42,34 +46,7 @@ public class UserDao {
         return user;
     }
 
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        UserDao dao = new UserDao();
+    public abstract Connection getConnection() throws ClassNotFoundException, SQLException;
 
-        User user = new User();
-        user.setId("kohen4");
-        user.setName("강성찬");
-        user.setPassword("wow");
 
-        dao.add(user);
-
-        System.out.println(user.getId() + "등록 성공");
-
-        User user2 = dao.get(user.getId());
-        System.out.println(user2.getName());
-        System.out.println(user2.getPassword());
-        System.out.println(user2.getId() + "조회 성공");
-
-        /*관심사의 분리
-        1. DB와 연결을 위한 커넥션을 어떻게 가져올까
-        2. 사용자 등록을 위해 DB에 보낼 SQL문장을 담을 Statement를 만들고 실행하는 것
-        3. 사용한 리소스인 Statement와 Connection 오브젝트를 닫아줘서 소중한 공유 리소스를 시스템에 돌려주는 것
-         */
-    }
-
-    private Connection getConnection() throws ClassNotFoundException, SQLException { // 이러한 작업을 메소드 추출 기법이라고 한다.
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection c = DriverManager.getConnection("jdbc:mysql://localhost/springbook?characterEncoding=UTF-8&serverTimezone=UTC", "root", "tjdals5124");
-
-        return c;
-    }
 }
